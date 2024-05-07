@@ -1,27 +1,26 @@
 # For more info on HTTP files go to https://aka.ms/vs/httpfile
-
 @apiUrl=https://localhost:1338
-@ordinaryUserToken=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IklUVVN0dWRlbnQiLCJzdWIiOiJJVFVTdHVkZW50IiwianRpIjoiZjM4ZDQ2ZTciLCJhdWQiOlsiaHR0cDovL2xvY2FsaG9zdDo1MTI2MCIsImh0dHBzOi8vbG9jYWxob3N0OjQ0MzI2IiwiaHR0cDovL2xvY2FsaG9zdDoxMzM3IiwiaHR0cHM6Ly9sb2NhbGhvc3Q6MTMzOCJdLCJuYmYiOjE3MTUwMjUxNDEsImV4cCI6MTcyMjk3Mzk0MSwiaWF0IjoxNzE1MDI1MTQzLCJpc3MiOiJkb3RuZXQtdXNlci1qd3RzIn0.oZG-Cez1-zOhyYkSNuqFvA737LxmuA8UZbmffM-jeAg
-@softwareCenterUserToken=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InN1ZUBhb2wuY29tIiwic3ViIjoic3VlQGFvbC5jb20iLCJqdGkiOiJiMDlkMzJiMCIsInJvbGUiOlsiU29mdHdhcmVDZW50ZXIiLCJCb3NzIl0sImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0OjUxMjYwIiwiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMjYiLCJodHRwOi8vbG9jYWxob3N0OjEzMzciLCJodHRwczovL2xvY2FsaG9zdDoxMzM4Il0sIm5iZiI6MTcxNTAyNjAzNywiZXhwIjoxODA5NjM0MDM3LCJpYXQiOjE3MTUwMjYwMzgsImlzcyI6ImRvdG5ldC11c2VyLWp3dHMifQ.kaVJlMN593Q139SQTnT2123vxtOmwjtme8UECi4k2q8
 
-# Members of the Software Center can add new items to our catalog of supported software
-# We have a "COLLECTION" of supported software, and we want to APPEND a new subordinate resource (DOCUMENT) to that collection
+@ordinaryUserToken=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IklUVVN0dWRlbnQiLCJzdWIiOiJJVFVTdHVkZW50IiwianRpIjoiODJkMmRhMWYiLCJhdWQiOlsiaHR0cDovL2xvY2FsaG9zdDo0MzQ2NyIsImh0dHBzOi8vbG9jYWxob3N0OjQ0MzY4IiwiaHR0cDovL2xvY2FsaG9zdDoxMzM3IiwiaHR0cHM6Ly9sb2NhbGhvc3Q6MTMzOCJdLCJuYmYiOjE3MTUwMjUxMzksImV4cCI6MTcyMjk3MzkzOSwiaWF0IjoxNzE1MDI1MTQxLCJpc3MiOiJkb3RuZXQtdXNlci1qd3RzIn0._Nd3LJTvkUh5TadS5WqzuMu0UiWCi2vPYsPBMYoEdGk
+
+@softwareCenterUserToken=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InN1ZUBhb2wuY29tIiwic3ViIjoic3VlQGFvbC5jb20iLCJqdGkiOiJiZDI2MWJkZiIsInJvbGUiOlsiU29mdHdhcmVDZW50ZXIiLCJCb3NzIl0sImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0OjQzNDY3IiwiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzNjgiLCJodHRwOi8vbG9jYWxob3N0OjEzMzciLCJodHRwczovL2xvY2FsaG9zdDoxMzM4Il0sIm5iZiI6MTcxNTAyNjAxNywiZXhwIjoxODA5NjM0MDE3LCJpYXQiOjE3MTUwMjYwMTksImlzcyI6ImRvdG5ldC11c2VyLWp3dHMifQ.qEw-iX056JkI52Nt3BsU0_xxtqWB-HcVnTNipnpoHrE
+# Members of the Software Center can add new items to our catalog of supported software.
+# We have a "COLLECTION" of supported software, and we want to APPEND a new subordinate resource (DOCUMENT) to that collection.
 
 POST {{apiUrl}}/catalog
-Content-Type: application/json
 Authorization: {{softwareCenterUserToken}}
+Content-Type: application/json
 
 {
-  "title": "Visual Studio Code",
-  "description": "Editor for Developers and Data Analysts, etc."
+  "title": "Jetbrains Rider",
+  "description": "An Integrated Development Environment for .NET Developer on Windows, Linux, Mac"
 }
 
 ###
 
 GET {{apiUrl}}/catalog
 Authorization: {{ordinaryUserToken}}
-
 ###
 
-GET {{apiUrl}}/catalog/1747fb32-581f-4636-8278-ff833a187619
+GET {{apiUrl}}/catalog/0d85702e-3efb-4c8d-8835-4413a7d31910
 Authorization: {{ordinaryUserToken}}

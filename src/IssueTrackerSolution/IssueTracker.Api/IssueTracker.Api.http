@@ -1,0 +1,5 @@
+﻿@IssueTracker.Api_HostAddress = https://localhost:1338
+
+GET {{IssueTracker.Api_HostAddress}}/catalog
+
+###

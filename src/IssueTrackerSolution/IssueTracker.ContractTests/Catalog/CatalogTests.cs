@@ -1,4 +1,5 @@
-﻿using Alba;
+﻿
+using Alba;
 using Alba.Security;
 using IssueTracker.Api.Catalog;
 using System.Security.Claims;
@@ -10,8 +11,8 @@ public class CatalogTests
     public async Task CanAddAnItemToTheCatalog()
     {
         var stubbedToken = new AuthenticationStub()
-            .With(ClaimTypes.NameIdentifier, "carl@aol.com")
-            .With(ClaimTypes.Role, "SoftwareCenter");
+            .With(ClaimTypes.NameIdentifier, "carl@aol.com") // Sub claim
+            .With(ClaimTypes.Role, "SoftwareCenter");  // this adds this role.
 
         await using var host = await AlbaHost.For<Program>(stubbedToken);
 
@@ -20,7 +21,8 @@ public class CatalogTests
         var response = await host.Scenario(api =>
         {
             api.Post.Json(itemToAdd).ToUrl("/catalog");
-            api.StatusCodeShouldBeOk();
+            api.StatusCodeShouldBe(201);
+            api.Header("Location").SingleValueShouldMatch("http://localhost/catalog/*.");
         });
 
         var actualResponse = await response.ReadAsJsonAsync<CatalogItemResponse>();
@@ -28,14 +30,17 @@ public class CatalogTests
         Assert.NotNull(actualResponse);
         Assert.Equal("Notepad", actualResponse.Title);
         Assert.Equal("A Text Editor on Windows", actualResponse.Description);
-    }
 
+        // We will do the "GET" Tomorrow to round this out...
+
+
+    }
     [Fact]
     public async Task OnlySoftwareCenterPeopleCanAddThings()
     {
         var stubbedToken = new AuthenticationStub()
-            .With(ClaimTypes.NameIdentifier, "carl@aol.com")
-            .With(ClaimTypes.Role, "TacoNose");
+           .With(ClaimTypes.NameIdentifier, "carl@aol.com") // Sub claim
+           .With(ClaimTypes.Role, "TacoNose");  // this adds this role.
 
         await using var host = await AlbaHost.For<Program>(stubbedToken);
 
@@ -44,7 +49,10 @@ public class CatalogTests
         var response = await host.Scenario(api =>
         {
             api.Post.Json(itemToAdd).ToUrl("/catalog");
-            api.StatusCodeShouldBe(403);
+            api.StatusCodeShouldBe(403); // Unauthorized
         });
+
+
+
     }
 }
