@@ -1,6 +1,7 @@
 using FluentValidation;
 using IssueTracker.Api.Catalog;
 using Marten;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using System.Text.Json;
 
@@ -8,13 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // sets up the auth stuff to read from our environment specific config.
 builder.Services.AddAuthentication().AddJwtBearer();
-
+builder.Services.AddScoped<IAuthorizationHandler, ShouldBeCreatorOfCatalogItemRequirementHandler>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("IsSoftwareAdmin", policy =>
     {
         policy.RequireRole("SoftwareCenter");
-
+        policy.AddRequirements(new ShouldBeCreatorToAlterCatalogItemRequirement());
     });
 });
 
