@@ -1,9 +1,14 @@
 using FluentValidation;
 using IssueTracker.Api.Catalog;
 using Marten;
+using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Reflection;
 using System.Text.Json;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +33,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.AddFluentValidationRulesToSwagger();
 builder.Services.AddSwaggerGen(options =>
 {
 
@@ -56,6 +61,10 @@ builder.Services.AddSwaggerGen(options =>
             },[]
         }
     });
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    options.DocInclusionPredicate((_, api) => !string.IsNullOrWhiteSpace(api.GroupName));
+    options.EnableAnnotations();
 }); // this will add the stuff to generate an OpenApi specification.
 //builder.Services.AddSingleton<IValidator<CreateCatalogItemRequest>, CreateCatalogItemRequestValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateCatalogItemRequestValidator>();
