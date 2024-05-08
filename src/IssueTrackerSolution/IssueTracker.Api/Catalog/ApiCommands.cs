@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using IssueTracker.Api.Shared;
 using Marten;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,10 +32,11 @@ public class ApiCommands(IValidator<CreateCatalogItemRequest> validator, IDocume
     [SwaggerOperation(Tags = ["Software Catalog"], OperationId = "AddCatalog")]
     public async Task<ActionResult<CatalogItemResponse>> AddACatalogItemAsync(
        [FromBody] CreateCatalogItemRequest request,
+      [FromServices] UserIdentityService userIdentityService,
        CancellationToken token)
     {
-        var user = this.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier);
-        var userId = user.Value;
+        var userId = await userIdentityService.GetUserSubAsync();
+
         var validation = await validator.ValidateAsync(request, token);
         if (!validation.IsValid)
         {

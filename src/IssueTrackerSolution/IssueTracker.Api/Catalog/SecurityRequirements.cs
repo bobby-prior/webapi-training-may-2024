@@ -1,6 +1,6 @@
-﻿using Marten;
+﻿using IssueTracker.Api.Shared;
+using Marten;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 
 namespace IssueTracker.Api.Catalog;
 
@@ -9,7 +9,7 @@ public class ShouldBeCreatorToAlterCatalogItemRequirement : IAuthorizationRequir
 }
 
 public class
-    ShouldBeCreatorOfCatalogItemRequirementHandler(IQuerySession session, IHttpContextAccessor httpContext) : AuthorizationHandler<ShouldBeCreatorToAlterCatalogItemRequirement>
+    ShouldBeCreatorOfCatalogItemRequirementHandler(IQuerySession session, IHttpContextAccessor httpContext, UserIdentityService userIdentityService) : AuthorizationHandler<ShouldBeCreatorToAlterCatalogItemRequirement>
 {
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, ShouldBeCreatorToAlterCatalogItemRequirement requirement)
     {
@@ -25,9 +25,9 @@ public class
             {
                 if (Guid.TryParse(routeParamId, out Guid itemId))
                 {
-                    var userId = context.User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier);
+                    var userName = await userIdentityService.GetUserSubAsync();
                     var isUsers = await session.Query<CatalogItem>()
-                        .Where(s => s.Id == itemId && s.AddedBy == userId.Value).CountAsync() == 1;
+                        .Where(s => s.Id == itemId && s.AddedBy == userName).CountAsync() == 1;
 
                     if (isUsers)
                     {

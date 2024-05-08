@@ -1,12 +1,13 @@
 using FluentValidation;
 using IssueTracker.Api.Catalog;
+using IssueTracker.Api.Shared;
 using Marten;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 
 
@@ -15,7 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 // sets up the auth stuff to read from our environment specific config.
 builder.Services.AddAuthentication().AddJwtBearer();
 builder.Services.AddScoped<IAuthorizationHandler, ShouldBeCreatorOfCatalogItemRequirementHandler>();
+
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<UserIdentityService>();
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("IsSoftwareAdmin", policy =>
@@ -30,6 +33,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
